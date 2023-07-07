@@ -104,3 +104,10 @@ def figure_name():
 if __name__ == '__main__':
     makefig.parse_args_make_figs()
 ```
+
+## Contributing, getting help, etc.
+I wrote this for my own use, but if you have suggestions, questions, requests,
+feel free to use the various communications channels at your disposal; github
+issues and pull-requests, email, etc. That said, I am interested in keeping this
+fairly technically-simple, more so than I am interested in adding more features,
+so I probably won't merge any complicated changes, let alone write them myself.
