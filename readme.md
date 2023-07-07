@@ -7,6 +7,18 @@ Tools for making standardized figures with a command line interface.
 - Functions to calculate 'good' figure sizes for use in LaTeX or other
   documents, and to make figures using these sizes.
 
+## Installation
+I don't intende to put this in the PyPI repository, so you'll need to get the
+source code from the GitHub repository to install (or just use) it. Here are
+some more-or-less reasonable options that (should) work:
+
+- Using pip (perhaps in a venv):
+    - `pip install git+https://github.com/Z2h-A6n/mpl-makefig`
+- Using pip-tools, you can add the following to `requirements.in`:
+    - `git+https://github.com/Z2h-A6n/mpl-makefig`
+- To download the code and use it directly:
+    - `git clone https://github.com/Z2h-A6n/mpl-makefig`
+
 ## How to use
 To use the command line interface, the basic procedure is as follows (see also
 the example at the end of this docstring):
