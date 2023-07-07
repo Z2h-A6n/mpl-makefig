@@ -1,0 +1,23 @@
+[project]
+name = "mpl-makefig"
+version = "0.1.0"
+authors = [
+  { name="Zachary William Anderson", email="zachwanderson@gmail.com" },
+]
+description = "Tools for making standardized matplotlib figures with a CLI."
+readme = "readme.md"
+requires-python = ">=3.6"
+dependencies = ["matplotlib"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Z2h-A6n/mpl-makefig"
+"Bug Tracker" = "https://github.com/Z2h-A6n/mpl-makefig/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
