@@ -72,6 +72,9 @@ Notable Functions and Variables
 - parse_args_make_figs:
   Invoke a simple command line interface to display or save all or some figures
   decorated with make.
+- label_subplot:
+  Add a text label to a subplot in a standard position. E.g. for labeling panels
+  in multi-panel figures.
 
 Example Script
 --------------
@@ -258,6 +261,76 @@ def len2inch(string):
     """
     num, unit = split_num_unit(string)
     return num * UNITS[unit]['inches']
+
+
+def label_subplot(ax, label, loc=None, bold_tex=True, edge_pad=0.05, **kwargs):
+    """Label an axis with a string in a standard location
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Axes on which to draw the label.
+    label : str
+        String to use for the label.
+    loc : optional, string or (float, float)
+        Location to draw the label. This can be a string like the 'loc' argument
+        to matplotlib.pyplot.legend(), e.g. 'upper left', 'right, 'lower right',
+        etc. Alternatively, this can be a 2-tuple of floats, which are used as
+        x and y coordinates of the center of the text, in axes units (i.e. the
+        range 0 - 1 covers the inside of the axes). Default: 'upper left'
+    bold_tex : optional, bool
+        If True, wrap the label string in '\\textbf{string}', in order to make
+        the label bold faced when using TeX for text rendering. If False, the
+        label is not modified. Default: True.
+    edge_pad : optional, float
+        Fraction of the axes width/height to space the text away from the edge
+        of the axes. Default: 0.05.
+    **kwargs : optional
+        Additional keyword argmuents are passed to ax.text().
+
+    Returns
+    -------
+    Nothing
+    """
+
+    loc = loc or 'upper left'
+    if isinstance(loc, str):
+        # If loc is a single-word string, v_loc will be an empty string.
+        *v_loc, h_loc = loc.split(' ')
+        v_loc = str(*v_loc)
+        if v_loc == 'upper':
+            v_align = 'top'
+            y = 1 - edge_pad
+        elif v_loc == 'center' or v_loc == '':
+            v_align = 'center'
+            y = 0.5
+        elif v_loc == 'lower':
+            v_align = 'bottom'
+            y = edge_pad
+        if h_loc == 'left':
+            h_align = 'left'
+            x = edge_pad
+        elif h_loc == 'center':
+            h_align = 'center'
+            x = 0.5
+        elif h_loc == 'right':
+            h_align = 'right'
+            x = 1 - edge_pad
+    elif isinstance(loc, tuple):
+        x, y = loc
+        h_align = 'center'
+        v_align = 'center'
+
+    if bold_tex:
+        label = f'\\textbf{{{label}}}'
+
+    ax.text(x,
+            y,
+            label,
+            horizontalalignment=h_align,
+            verticalalignment=v_align,
+            transform=ax.transAxes,
+            **kwargs)
 
 
 def standard_figsize(width=None, height=None, aspect=GOLDEN, nrows=1, ncols=1):
