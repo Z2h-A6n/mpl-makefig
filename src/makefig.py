@@ -119,6 +119,18 @@ UNITS = {
         'inches': 1.,
         'description': 'Inch'
     },
+    'standard_text_width': {
+        'inches': 6.5,
+        'description': 'Reasonable width based on published scientific docs.'
+    },
+    'standard_text_width': {
+        'inches': 6.5,
+        'description': 'Reasonable width based on published scientific docs.'
+    },
+    'standard_text_height': {
+        'inches': 6.5 / GOLDEN,
+        'description': 'Reasonable height based on published scientific docs.'
+    },
     'beamer_ar169_width': {
         'inches': 5.511811263318113,
         'description': '\\documentclass[aspectratio=169]{beamer} \\linewidth'
