@@ -234,7 +234,7 @@ def split_num_unit(string):
 
 
 def len2inch(string):
-    """Shortdesc
+    """Convert a value+unit string to float inches.
 
     Parameters
     ----------
