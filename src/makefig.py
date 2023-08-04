@@ -127,7 +127,7 @@ UNITS = {
         'description': 'Reasonable width based on published scientific docs.'
     },
     'standard_text_height': {
-        'inches': 6.5 / GOLDEN,
+        'inches': 9.5,
         'description': 'Reasonable height based on published scientific docs.'
     },
     'beamer_ar169_width': {
