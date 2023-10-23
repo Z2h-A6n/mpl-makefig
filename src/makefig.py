@@ -99,6 +99,7 @@ if __name__ == '__main__':
 import sys
 import os
 import functools
+import multiprocessing as mp
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
@@ -558,7 +559,19 @@ def parse_args(args, save=False):
     return save, {arg: FIGURES_REGISTRY[arg] for arg in args}
 
 
-def make_figs(save, figures, save_dir='figures', save_type='pdf'):
+def _make_fig(figname, figfunc, save_dir_path, save_extension):
+    fig = figfunc()
+    if save_dir_path:
+        savename = os.path.join(save_dir_path, f'{figname}.{save_extension}')
+        fig.savefig(savename)
+        plt.close(fig)
+
+
+def make_figs(save,
+              figures,
+              save_dir='figures',
+              save_type='pdf',
+              parallel=True):
     """Make a set of figures and save or show them.
 
     Parameters
@@ -578,6 +591,13 @@ def make_figs(save, figures, save_dir='figures', save_type='pdf'):
     save_type : str
         The filetype (and backend) to use for saving figures. The implemented
         options are 'pdf' (default) and 'pgf'.
+    parallel : bool or int
+        Whether to make the figures in parallel using multiprocessing.Pool.map.
+        If True (default), the number of processes is determined automatically.
+        If an integer is specified, that number of processes is used. If False,
+        figures are processed serially. Note that this is currently only
+        implemented when saving figures, figures to be shown are processed
+        serially.
 
     Note
     ----
@@ -606,17 +626,29 @@ def make_figs(save, figures, save_dir='figures', save_type='pdf'):
             raise NotImplementedError("save_type should be 'pdf' or 'pgf'.")
         save_dir_path = os.path.join(os.path.dirname(sys.argv[0]), save_dir)
         os.makedirs(save_dir_path, exist_ok=True)
-    for figname, figfunc in figures.items():
-        fig = figfunc()
-        if save:
-            savename = os.path.join(save_dir_path,
-                                    f'{figname}.{save_extension}')
-            fig.savefig(savename)
-            plt.close(fig)
+    else:
+        save_dir_path = None
+        save_extension = None
+    make_fig_args = [(*item, save_dir_path, save_extension)
+                     for item in figures.items()]
+    if save and parallel:  # plt.show() seems to only work within the process.
+        # TODO: Make verbose() work with parallel execution
+        if type(parallel) is int:
+            processes = parallel
+        else:
+            processes = None  # mp.Pool will pick the number of processes
+        with mp.Pool(processes) as pool:
+            pool.starmap(_make_fig, make_fig_args)
+    else:
+        for args in make_fig_args:
+            _make_fig(*args)
     plt.show(block=True)
 
 
-def parse_args_make_figs(save=False, savedir='figures', save_type='pdf'):
+def parse_args_make_figs(save=False,
+                         savedir='figures',
+                         save_type='pdf',
+                         parallel=True):
     """Parse command line arguments, make figures, then save or show them.
 
     Parameters
@@ -630,6 +662,13 @@ def parse_args_make_figs(save=False, savedir='figures', save_type='pdf'):
     save_type : str
         The filetype (and backend) to use for saving figures. The implemented
         options are 'pdf' (default) and 'pgf'.
+    parallel : bool or int
+        Whether to make the figures in parallel using multiprocessing.Pool.map.
+        If True (default), the number of processes is determined automatically.
+        If an integer is specified, that number of processes is used. If False,
+        figures are processed serially. Note that this is currently only
+        implemented when saving figures, figures to be shown are processed
+        serially.
 
     Note
     ----
@@ -646,4 +685,4 @@ def parse_args_make_figs(save=False, savedir='figures', save_type='pdf'):
         The figure-making part of this function.
     """
 
-    make_figs(*parse_args(sys.argv, save), savedir, save_type)
+    make_figs(*parse_args(sys.argv, save), savedir, save_type, parallel)
