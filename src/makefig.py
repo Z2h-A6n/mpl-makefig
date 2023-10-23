@@ -193,14 +193,14 @@ def verbose(figfunc):
 
     @functools.wraps(figfunc)
     def wrapper_verbose(*args, **kwargs):
-        print(f'Processing: {figfunc.__name__}', end='')
         if figfunc.__doc__:
             shortdoc = figfunc.__doc__.split("\n", 1)[0]
+            shortdoc = f' - {shortdoc}'
         else:
             shortdoc = ''
-        print(f' - {shortdoc}')
+        print(f'Starting {figfunc.__name__}{shortdoc}')
         fig = figfunc(*args, **kwargs)
-        print('  Done')
+        print(f'Finished {figfunc.__name__}')
         return fig
 
     return wrapper_verbose
