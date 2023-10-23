@@ -85,6 +85,7 @@ def some_function():
     ...
 
 @makefig.make      # Adds this function to FIGURES_REGISTRY
+@makefig.verbose   # Optional, should be after @makefig.make
 def figure_name():
     # Do whatever is necessary to produce a figure, e.g.:
     fig, ax = makefig.standard_subplots()
@@ -580,7 +581,6 @@ def make_figs(save, figures, save_dir='figures', save_type='pdf'):
 
     Note
     ----
-    - In the current implementation, the PGF matplotlib backend is used.
     - If save is True, each of the functions in figures.values() is executed,
       and the resulting figure is saved in save_dir, then closed.
     - If save is False, each of the functions in figures.values() is executed,
