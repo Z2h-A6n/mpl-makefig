@@ -69,6 +69,10 @@ Notable Functions and Variables
 - standard_subplots:
   Produce a figure with axes like matplotlib.pyplot.subplots, using
   standard_figsize to decide the size.
+- figprint:
+  Takes the same arguments as builtin `print`, but prefixes the output with the
+  name of the function that figprint is called in. Useful for understanding
+  output when figures are being generated in parallel.
 - parse_args_make_figs:
   Invoke a simple command line interface to display or save all or some figures
   decorated with make.
@@ -98,6 +102,7 @@ if __name__ == '__main__':
 
 import sys
 import os
+import inspect
 import functools
 import multiprocessing as mp
 import matplotlib as mpl
@@ -496,6 +501,17 @@ def standard_subplots(nrows=1,
                         figsize=standard_figsize(width, height, aspect, nrows,
                                                  ncols),
                         **kwargs)
+
+
+def figprint(*args, sep=' ', end='\n', file=None, flush=False):
+    """Wraps the builtin `print()` to prefix the output with the figure name
+
+    See the builtin print docstring for more information. This just prepends
+    *args with the name of the function this is called in, which is retrieved
+    from inspect.stack()[1][3], followed by a colon.
+    """
+    label = '{}:'.format(inspect.stack()[1][3])
+    print(*(label, *args), sep=sep, end=end, file=file, flush=flush)
 
 
 def parse_args(args, save=False):
