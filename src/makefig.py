@@ -73,6 +73,9 @@ Notable Functions and Variables
   Takes the same arguments as builtin `print`, but prefixes the output with the
   name of the function that figprint is called in. Useful for understanding
   output when figures are being generated in parallel.
+- filter_registry:
+  Filter the figure registry using the provided functions. By default, filters
+  out functions defined in modules other than the one named '__main__'.
 - parse_args_make_figs:
   Invoke a simple command line interface to display or save all or some figures
   decorated with make.
@@ -97,6 +100,7 @@ def figure_name():
     return fig
 
 if __name__ == '__main__':
+    # makefig.filter_registry() # Optional, see function docstring
     makefig.parse_args_make_figs()
 """
 
@@ -512,6 +516,55 @@ def figprint(*args, sep=' ', end='\n', file=None, flush=False):
     """
     label = '{}:'.format(inspect.stack()[1][3])
     print(*(label, *args), sep=sep, end=end, file=file, flush=flush)
+
+
+def registry_filter_main_module(_, f):
+    """Remove functions from the figures registry if not defined in __main__
+
+    This is the default function used in filter_registry(). It removes any
+    figure-generation functions from the registry if they are not defined in
+    the module called '__main__'. Rather than provide a detailed description of
+    parameters and return values, note that the entirety of the source code is:
+    ```
+    return f.__module__ == '__main__'
+    ```
+    """
+    return f.__module__ == '__main__'
+
+
+def filter_registry(filters=[registry_filter_main_module], registry=None):
+    """Filter the figure registry using the provided functions
+    Parameters
+    ----------
+    filters : optional, list of functions
+        A list of functions to use to filter the figures registry. Each
+        function should take as its only arguments the key and value of an
+        item in the registry, i.e. a function's name and the function object,
+        and return False if the function should be filtered out of the
+        registry, or True if it should be left in the registry.
+    registry : optional, dict
+        A figure registry dictionary. By default if no registry is provided,
+        the standard makefig.FIGURES_REGISTRY dictionary is used, and modified
+        in-place. Otherwise, the provided dictionary is filtered.
+
+    Returns
+    -------
+    If registry is not provided as an argument, nothing is returned, and
+    makefig.FIGURES_REGISTRY is modified in place. Otherwise, the filtered
+    registry is returned.
+    """
+    if registry is None:
+        global FIGURES_REGISTRY
+        registry = FIGURES_REGISTRY
+        _global = True
+    else:
+        _global = False
+    for filt in filters:
+        registry = {k: f for k, f in registry.items() if filt(k, f)}
+    if _global:
+        FIGURES_REGISTRY = registry
+    else:
+        return registry
 
 
 def parse_args(args, save=False):
