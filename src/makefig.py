@@ -169,6 +169,36 @@ UNITS = {
         'description':
             '\\documentclass[twocolumn]{article} \\textheight, letter paper'
     },
+    'tex_revtex_preprint_width': {
+        'inches':
+            468.0 * 72.27,
+        'description':
+            '\\documentclass[preprint]{revtex} \\linewidth, letter paper',
+    },
+    'tex_revtex_preprint_height': {
+        'inches':
+            665.5 * 72.27,
+        'description':
+            '\\documentclass[preprint]{revtex} \\textheight, letter paper',
+    },
+    'tex_revtex_twocol_halfwidth': {
+        'inches':
+            246.0 * 72.27,
+        'description':
+            '\\documentclass[twocolumn]{revtex} column width, letter paper',
+    },
+    'tex_revtex_twocol_width': {
+        'inches':
+            510.0 * 72.27,
+        'description':
+            '\\documentclass[twocolumn]{revtex} \\linewidth, letter paper',
+    },
+    'tex_revtex_twocol_height': {
+        'inches':
+            672.0 * 72.27,
+        'description':
+            '\\documentclass[twocolumn]{revtex} \\textheight, letter paper',
+    },
 }
 
 
