@@ -83,12 +83,12 @@ appropriate scaling factor.
   - Produce a figure with axes like `matplotlib.pyplot.subplots`, using
   `standard_figsize` to decide the size.
 - `figprint`:
-    - Takes the same arguments as builtin `print`, but prefixes the output with
+  - Takes the same arguments as builtin `print`, but prefixes the output with
     the name of the function that figprint is called in. Useful for
     understanding output when figures are being generated in parallel.
 - `parse_args_make_figs`:
   - Invoke a simple command line interface to display or save all or some figures
-  decorated with `make`.
+    decorated with `make`.
 - `annotate`:
   - Automatically label subplots with letter labels ('a', 'b', 'c', ...).
 
