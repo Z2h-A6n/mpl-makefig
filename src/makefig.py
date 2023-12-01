@@ -79,7 +79,7 @@ Notable Functions and Variables
 - parse_args_make_figs:
   Invoke a simple command line interface to display or save all or some figures
   decorated with make.
-- label_subplot:
+- annotate:
   Add a text label to a subplot in a standard position. E.g. for labeling panels
   in multi-panel figures.
 
@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
 import sys
 import os
+import warnings
 import inspect
 import functools
 import multiprocessing as mp
@@ -304,8 +305,125 @@ def len2inch(string):
     return num * UNITS[unit]['inches']
 
 
+def annotate(axs,
+             text=None,
+             va='top',
+             ha='left',
+             outside=True,
+             pad=None,
+             textcoords='offset points',
+             **kwargs):
+    """Label one or more axes with characters with sane defaults
+
+    Parameters
+    ----------
+    axs : matplotlib.axes.Axes or list numpy.ndarray of Axes
+        The axes to annotate.
+    text : None or int list of int or str or list of str
+        The text to use for the annotation, or integer(s) indicating a letter of
+        the alphabet to use. If axs has multiple axes, this should be a list
+        containing a string or integer for each axis in axs.flatten(). Integers
+        are converted to letters of the alphabet, e.g. 0 -> 'a', 1 -> 'b', etc.
+        By default, axes axs.flatten() are labeld 'a', 'b', 'c', ... in order.
+    va : one of 'top', 'center', 'bottom'
+        Vertical specification of which corner/edge of the axes to label.
+    ha : one of 'left', 'center', 'right'
+        Horizontal specification of which corner/edge of the axes to label.
+    outside: bool
+        Whether to label inside or outside the axes frame.
+    pad : None or number of 2-tuple of numbers
+        The padding between the corner/edge of the axes and the label text. A
+        tuple specifies x and y padding. A single number specifies the same
+        padding for x and y. The defaults depend on the values of `va`, `ha`,
+        and `outside`, and were chosen to be reasonable for labels near the
+        corners of axes, rather than near the edges.
+    textcoords : passed to matplotlib.pyplot.annotate()
+        The coordinates in which `pad` is specified. By default, these are font
+        points (1/72 of an inch). Pixels can be used by specifying
+        'offset pixels'. See matplotlib.pyplot.annotate for other options.
+    **kwargs : dict
+        Passed to matplotlib.pyplotplot.annotate(), e.g. to set font attributes.
+
+    Returns
+    -------
+    Nothing
+    """
+
+    # Account for different types of axs (and matching text)
+    try:
+        iter(axs)
+        axs = axs.flatten()
+        try:
+            # If text is provided in an array in the same shape as axs
+            text = text.flatten()
+        except AttributeError:
+            pass
+    except TypeError:
+        axs = [axs]
+
+    # Convert text from various formats to [str], in steps
+    if text is None:
+        text = range(len(axs))
+    elif isinstance(text, int):
+        text = [text]
+    if isinstance(text[0], int):
+        text = [chr(t + ord('a')) for t in text]
+    elif isinstance(text, str):
+        text = [text]
+
+    # Different default values of pad depending on outside, ha, va
+    if pad is None:
+        if outside:
+            pad = (
+                {
+                    'left': 20,
+                    'center': 0,
+                    'right': 10
+                }[ha],
+                {
+                    'top': 10,
+                    'center': 0,
+                    'bottom': 20
+                }[va],
+            )
+        else:
+            pad = (5, 5)
+    elif isinstance(pad, (int, float)):
+        pad = (pad, pad)
+
+    # Determine ax.annotate arguments
+    has = ['left', 'center', 'right']
+    vas = ['top', 'center', 'bottom']
+    xs = [0, 0.5, 1]
+    ys = [1, 0.5, 0]
+    xtexts = [m * pad[0] for m in [-1, 0, 1]]
+    ytexts = [m * pad[1] for m in [1, 0, -1]]
+    i_h = has.index(ha)
+    i_v = vas.index(va)
+    if outside:
+        has.reverse()
+        vas.reverse()
+    else:
+        xtexts.reverse()
+        ytexts.reverse()
+
+    for ax, tx in zip(axs, text):
+        ax.annotate(tx,
+                    xy=(xs[i_h], ys[i_v]),
+                    xytext=(xtexts[i_h], ytexts[i_v]),
+                    va=vas[i_v],
+                    ha=has[i_h],
+                    xycoords='axes fraction',
+                    textcoords=textcoords,
+                    **kwargs)
+
+
+# WARN: This is deprecated.
+# TODO: Remove this (eventually).
 def label_subplot(ax, label, loc=None, bold_tex=True, edge_pad=0.05, **kwargs):
     """Label an axis with a string in a standard location
+
+    NOTE: This is deprecated in favor of annotate, which is much better.
 
     Parameters
     ----------
@@ -333,7 +451,9 @@ def label_subplot(ax, label, loc=None, bold_tex=True, edge_pad=0.05, **kwargs):
     -------
     Nothing
     """
-
+    warnings.warn(
+        "makefig.label_subplot() is deprecated. Use makefig.annotate().",
+        DeprecationWarning)
     loc = loc or 'upper left'
     if isinstance(loc, str):
         # If loc is a single-word string, v_loc will be an empty string.

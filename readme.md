@@ -89,6 +89,8 @@ appropriate scaling factor.
 - `parse_args_make_figs`:
   - Invoke a simple command line interface to display or save all or some figures
   decorated with `make`.
+- `annotate`:
+  - Automatically label subplots with letter labels ('a', 'b', 'c', ...).
 
 ## Example Script 
 ```python 
