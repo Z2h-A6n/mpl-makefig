@@ -453,7 +453,7 @@ def label_subplot(ax, label, loc=None, bold_tex=True, edge_pad=0.05, **kwargs):
     """
     warnings.warn(
         "makefig.label_subplot() is deprecated. Use makefig.annotate().",
-        DeprecationWarning)
+        FutureWarning, stacklevel=2)
     loc = loc or 'upper left'
     if isinstance(loc, str):
         # If loc is a single-word string, v_loc will be an empty string.
