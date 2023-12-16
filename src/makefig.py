@@ -809,7 +809,10 @@ def make_figs(save,
         being executed. Defaults to 'figures'.
     save_type : str
         The filetype (and backend) to use for saving figures. The implemented
-        options are 'pdf' (default) and 'pgf'.
+        options are 'pdf' (default), 'svg', 'pgf', and 'png'. The 'png' type
+        uses the default matplotlib backend when generating the figures, i.e.
+        whatever you have configured in your matplotlibrc file, then saves the
+        figures as png files.
     parallel : bool or int
         Whether to make the figures in parallel using multiprocessing.Pool.map.
         If True (default), the number of processes is determined automatically.
@@ -838,11 +841,16 @@ def make_figs(save,
         if save_type == 'pdf':
             mpl.use('pdf')
             save_extension = 'pdf'
+        elif save_type == 'svg':
+            mpl.use('svg')
+            save_extension = 'svg'
         elif save_type == 'pgf':
             mpl.use('pgf')
             save_extension = 'pgf'
+        elif save_type == 'png':
+            save_extension = 'png'
         else:
-            raise NotImplementedError("save_type should be 'pdf' or 'pgf'.")
+            raise NotImplementedError(f"save_type '{save_type}' not supported.")
         save_dir_path = os.path.join(os.path.dirname(sys.argv[0]), save_dir)
         os.makedirs(save_dir_path, exist_ok=True)
     else:
