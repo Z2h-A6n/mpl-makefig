@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
 import sys
 import os
+import re
 import warnings
 import inspect
 import functools
@@ -252,11 +253,11 @@ def split_num_unit(string):
 
     Parameters
     ----------
-    x : str
-        A string containing an (optional) numeric part followed by a non-numeric
-        part. The numeric part is considered to be any characters in the set
-        '0123456789.-', and the string part is whatever is left over after
-        removing the numeric part.
+    string : str
+        A string containing an (optional) numeric prefix followed by a unit
+        specifier. The numeric prefix can be (more-or-less) any string that can
+        be converted to a float, and the unit specifier is whatever is left
+        after removing the numeric prefix.
 
     Returns
     -------
@@ -264,13 +265,11 @@ def split_num_unit(string):
         num is the numeric part of the string converted to a float. unit is the
         non-numeric suffix.
     """
-    # WARN: This is probably not a very robust implementation, but it works in
-    # the expected cases, and doesn't require any imports or verbose code.
-    unit = string.translate(str.maketrans('', '', '0123456789.-'))
-    try:
-        num = float(string.removesuffix(unit))
-    except ValueError:
+    num_str, unit = re.compile('^([0-9.]*)(.*)').match(string).groups()
+    if num_str == '':
         num = 1.
+    else:
+        num = float(num_str)
     return num, unit
 
 
@@ -280,9 +279,10 @@ def len2inch(string):
     Parameters
     ----------
     string : str
-        A string of the form NUMUNIT, where NUM is any collection of
-        '0123456789.-' that can be converted to a float, and UNIT is any key of
-        the dictionary UNITS.
+        A string containing an (optional) numeric prefix followed by a unit
+        specifier. The numeric prefix can be (more-or-less) any string that can
+        be converted to a float, and the unit specifier should be a key in the
+        UNITS dictionary.
 
     Returns
     -------
