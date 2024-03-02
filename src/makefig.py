@@ -312,6 +312,7 @@ def annotate(axs,
              outside=True,
              pad=None,
              textcoords='offset points',
+             fmt=None,
              **kwargs):
     """Label one or more axes with characters with sane defaults
 
@@ -342,6 +343,13 @@ def annotate(axs,
         The coordinates in which `pad` is specified. By default, these are font
         points (1/72 of an inch). Pixels can be used by specifying
         'offset pixels'. See matplotlib.pyplot.annotate for other options.
+    fmt : str
+        Format string used with string.format() to produce the text used for
+        annotation. The provided (or default) values of text are used as the
+        only parameter of fmt.format(), so in the simplest case, the first
+        first instance of '{}' in fmt is replaced by the annotation text. By
+        default, fmt = '{}', so the bare text is used, but the text could (for
+        example) be wrapped in parentheses using fmt = '({})'.
     **kwargs : dict
         Passed to matplotlib.pyplotplot.annotate(), e.g. to set font attributes.
 
@@ -411,8 +419,9 @@ def annotate(axs,
         xtexts.reverse()
         ytexts.reverse()
 
+    fmt = fmt or '{}'
     for ax, tx in zip(axs, text):
-        ax.annotate(tx,
+        ax.annotate(fmt.format(tx),
                     xy=(xs[i_h], ys[i_v]),
                     xytext=(xtexts[i_h], ytexts[i_v]),
                     va=vas[i_v],
