@@ -317,8 +317,9 @@ def annotate(axs,
 
     Parameters
     ----------
-    axs : matplotlib.axes.Axes or list numpy.ndarray of Axes
-        The axes to annotate.
+    axs : matplotlib.axes.Axes or list/numpy.ndarray of Axes
+        The axes to annotate. If axs is a list, it should be a flat (not-nested)
+        list of matplotlib.axes.Axes.
     text : None or int list of int or str or list of str
         The text to use for the annotation, or integer(s) indicating a letter of
         the alphabet to use. If axs has multiple axes, this should be a list
@@ -360,6 +361,9 @@ def annotate(axs,
             pass
     except TypeError:
         axs = [axs]
+    except AttributeError:
+        if isinstance(axs, list):
+            pass
 
     # Convert text from various formats to [str], in steps
     if text is None:
