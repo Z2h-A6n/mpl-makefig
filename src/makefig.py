@@ -21,7 +21,7 @@ the example at the end of this docstring):
   parse_args_make_figs().
 - Command line usage:
   > script [-h|--help] [save|nosave] [figurename [anotherfigure [...]]]
-  - If the first agument is 'save' or 'nosave', the default save/display
+  - If the first argument is 'save' or 'nosave', the default save/display
     behavior will be overridden.
   - If figure-making function names are listed on the command line, only those
     figures will be made, otherwise all figures will be made.
@@ -39,9 +39,9 @@ height of a text area in a LaTeX document, the following procedure is useful:
   - \\showthe\\linewidth
   - \\showthe\\textheight
 - Compile the document with pdflatex. Some other programs that automate the
-  document-compillation process may hide or mangle the relevant output, so it's
+  document-compilation process may hide or mangle the relevant output, so it's
   probably best to run pdflatex directly.
-- Compillation will stop when the \\showthe command is encountered, and the
+- Compilation will stop when the \\showthe command is encountered, and the
   relevant length will be printed in units of pt.
 
 A note on beamer usage: When making a multi-column slide, and setting column
@@ -52,7 +52,7 @@ appropriate scaling factor.
 Notable Functions and Variables
 -------------------
 - UNITS:
-  Dictionary mapping various lenght units to floats representing inch
+  Dictionary mapping various length units to floats representing inch
   measurements. These units can be used with standard_figsize and related
   functions.
 - make:
@@ -326,7 +326,7 @@ def annotate(axs,
         the alphabet to use. If axs has multiple axes, this should be a list
         containing a string or integer for each axis in axs.flatten(). Integers
         are converted to letters of the alphabet, e.g. 0 -> 'a', 1 -> 'b', etc.
-        By default, axes axs.flatten() are labeld 'a', 'b', 'c', ... in order.
+        By default, axes axs.flatten() are labeled 'a', 'b', 'c', ... in order.
     va : one of 'top', 'center', 'bottom'
         Vertical specification of which corner/edge of the axes to label.
     ha : one of 'left', 'center', 'right'
@@ -458,7 +458,7 @@ def label_subplot(ax, label, loc=None, bold_tex=True, edge_pad=0.05, **kwargs):
         Fraction of the axes width/height to space the text away from the edge
         of the axes. Default: 0.05.
     **kwargs : optional
-        Additional keyword argmuents are passed to ax.text().
+        Additional keyword arguments are passed to ax.text().
 
     Returns
     -------
@@ -646,15 +646,6 @@ def standard_subplots(nrows=1,
     standard_subplots:
         Wrapper on matplotlib.pyplot.subplots using this function for the size
         and the number of rows and columns of Axes.
-    Parameters
-    ----------
-    x : type
-        Desc
-
-    Returns
-    -------
-    x : type
-        Desc
 
     See also
     --------
@@ -821,7 +812,7 @@ def make_figs(save,
         This is interpreted relative to the parent directory of the program
         being executed. Defaults to 'figures'.
     save_type : str
-        The filetype (and backend) to use for saving figures. The implemented
+        The file type (and backend) to use for saving figures. The implemented
         options are 'pdf' (default), 'svg', 'pgf', and 'png'. The 'png' type
         uses the default matplotlib backend when generating the figures, i.e.
         whatever you have configured in your matplotlibrc file, then saves the
@@ -900,7 +891,7 @@ def parse_args_make_figs(save=False,
         This is interpreted relative to the parent directory of the program
         being executed. Defaults to 'figures'.
     save_type : str
-        The filetype (and backend) to use for saving figures. The implemented
+        The file type (and backend) to use for saving figures. The implemented
         options are 'pdf' (default) and 'pgf'.
     parallel : bool or int
         Whether to make the figures in parallel using multiprocessing.Pool.map.
