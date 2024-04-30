@@ -8,7 +8,7 @@ Tools for making standardized figures with a command line interface.
   documents, and to make figures using these sizes.
 
 ## Installation
-I don't intende to put this in the PyPI repository, so you'll need to get the
+I don't intended to put this in the PyPI repository, so you'll need to get the
 source code from the GitHub repository to install (or just use) it. Here are
 some more-or-less reasonable options that (should) work:
 
@@ -34,7 +34,7 @@ the example at the end of this docstring):
 - Command line usage:
 
   `script [-h|--help] [save|nosave] [figurename [anotherfigure [...]]]`
-  - If the first agument is `save` or `nosave`, the default save/display
+  - If the first argument is `save` or `nosave`, the default save/display
     behavior will be overridden.
   - If figure-making function names are listed on the command line, only those
     figures will be made, otherwise all figures will be made.
@@ -45,27 +45,28 @@ is done using the functions standard_figsize, standard_figure, and
 standard_subplots, which take arguments (among others, see docstrings),
 specifying figure sizes in convenient units, rather than just inches, as is the
 case with matplotlib. The available units, their descriptions, and their lengths
-in inches are stored in the `UNITS` dictionary. These include some common lengths
-used in LaTeX documents, but any length can be specified. To find the width or
-height of a text area in a LaTeX document, the following procedure is useful:
+in inches are stored in the `UNITS` dictionary. These include some common
+lengths used in LaTeX documents, but any length can be specified. To find the
+width or height of a text area in a LaTeX document, the following procedure is
+useful:
 
 - In the relevant place in the LaTeX source code, write one of the following:
   - `\showthe\linewidth` 
   - `\showthe\textheight`
 - Compile the document with `pdflatex`. Some other programs that automate the
-  document-compillation process may hide or mangle the relevant output, so it's
+  document-compilation process may hide or mangle the relevant output, so it's
   probably best to run pdflatex directly.
-- Compillation will stop when the `\showthe` command is encountered, and the
+- Compilation will stop when the `\showthe` command is encountered, and the
   relevant length will be printed in units of `pt`.
 
 A note on beamer usage: When making a multi-column slide, and setting column
 widths using `\column{XX\textwidth}`, the resulting `\linewidth` in the column
-is `XX` times the full-page linewidth, so `beamer_169_width` can be used, with the
-appropriate scaling factor.
+is `XX` times the full-page linewidth, so `beamer_169_width` can be used, with
+the appropriate scaling factor.
 
 ## Notable Functions and Variables 
 - `UNITS`: 
-  - Dictionary mapping various lenght units to floats representing inch
+  - Dictionary mapping various length units to floats representing inch
   measurements. These units can be used with `standard_figsize` and related
   functions.
 - `make`:
@@ -80,7 +81,8 @@ appropriate scaling factor.
   `matplotlib.pyplot.figure`, based on common/standard length scales and aspect
   ratios.
 - `standard_figure`:
-  - Produce a `matplotlib.figure.Figure` using `standard_figsize` to decide the size.
+  - Produce a `matplotlib.figure.Figure` using `standard_figsize` to decide the
+  size.
 - `standard_subplots`:
   - Produce a figure with axes like `matplotlib.pyplot.subplots`, using
   `standard_figsize` to decide the size.
@@ -103,6 +105,10 @@ def some_function():
     ...
 
 @makefig.make      # Adds this function to FIGURES_REGISTRY
+# Optionally, add other decorators here, e.g. makefig.debug_layout and
+# makefig.verbose. Note that any decorators added before makefig.make will not
+# be run when using makefig.parse_args_make_figs(), or similar interfaces. This
+# may be useful, but is probably not what you want in most cases.
 def figure_name():
     # Do whatever is necessary to produce a figure, e.g.:
     fig, ax = makefig.standard_subplots()
