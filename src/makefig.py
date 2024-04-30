@@ -60,6 +60,8 @@ Notable Functions and Variables
   interface invoked with parse_args_make_figs.
 - verbose:
   Decorator to provide text output indicating which function is running.
+- debug_layout:
+  Decorator to help debug figure layout issues by showing the layout boxes.
 - standard_figsize:
   Calculate a figure size, e.g. for use with the figsize parameter of
   matplotlib.pyplot.figure, based on common/standard length scales and aspect
@@ -113,6 +115,7 @@ import functools
 import multiprocessing as mp
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib._layoutgrid as layoutgrid
 
 FIGURES_REGISTRY = {}
 
@@ -244,6 +247,24 @@ def verbose(figfunc):
         fig = figfunc(*args, **kwargs)
         print(f'Finished {figfunc.__name__}')
         return fig
+
+    return wrapper_verbose
+
+
+def debug_layout(figfunc):
+    """Decorator that draws layout-related boxes on the figure.
+
+    The boxes that are used to calculate the figure layout - i.e. where the
+    various axes, text, etc. are placed in the figure - are highlighted in color
+    in the figure that is produced. This is useful for debugging issues related
+    to the figure layout.
+
+    This just uses matplotlib._layoutgrid.plot_children(figfunc()).
+    """
+
+    @functools.wraps(figfunc)
+    def wrapper_verbose(*args, **kwargs):
+        return layoutgrid.plot_children(figfunc(*args, **kwargs))
 
     return wrapper_verbose
 

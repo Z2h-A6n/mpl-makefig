@@ -73,6 +73,8 @@ appropriate scaling factor.
   interface invoked with `parse_args_make_figs`.
 - `verbose`:
   - Decorator to provide text output indicating which function is running.
+- `debug_layout`:
+  - Decorator to help debug figure layout issues by showing the layout boxes.
 - `standard_figsize`:
   - Calculate a figure size, e.g. for use with the figsize parameter of
   `matplotlib.pyplot.figure`, based on common/standard length scales and aspect
